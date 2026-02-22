@@ -1,11 +1,14 @@
 class Solution:
     def binaryGap(self, n: int) -> int:
-        ans = 0
-        d = -32  
-        while n:
-            if n % 2 == 1:
-                ans = max(ans, d)
-                d = 0
-            n //= 2
-            d += 1
-        return ans
+        binary_str = bin(n)[2:]  
+        last_one_index = -1
+        max_distance = 0
+
+        for i, char in enumerate(binary_str):
+            if char == '1':
+                if last_one_index != -1:
+                    current_distance = i - last_one_index
+                    max_distance = max(max_distance, current_distance)
+                last_one_index = i
+                
+        return max_distance
