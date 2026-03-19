@@ -1,27 +1,33 @@
 class Solution:
-    def numberOfSubmatrices(self, grid: list[list[str]]) -> int:
-        m, n = len(grid), len(grid[0])
-        x_count = [[0] * (n + 1) for _ in range(m + 1)]
-        y_count = [[0] * (n + 1) for _ in range(m + 1)]
-        ans = 0
-
-        for i in range(m):
-            for j in range(n):
-                x_count[i + 1][j + 1] = (
-                    (1 if grid[i][j] == 'X' else 0) +
-                    x_count[i][j + 1] +
-                    x_count[i + 1][j] -
-                    x_count[i][j]
-                )
-                y_count[i + 1][j + 1] = (
-                    (1 if grid[i][j] == 'Y' else 0) +
-                    y_count[i][j + 1] +
-                    y_count[i + 1][j] -
-                    y_count[i][j]
-                )
+    def numberOfSubmatrices(self, grid: List[List[str]]) -> int:
+      
+        rows, cols = len(grid), len(grid[0])
+      
+        prefix_sum = [[[0] * 2 for _ in range(cols + 1)] for _ in range(rows + 1)]
+      
+        result_count = 0
+      
+        
+        for row_idx, row_data in enumerate(grid, 1):
+            for col_idx, cell_value in enumerate(row_data, 1):
+               
+                prefix_sum[row_idx][col_idx][0] = (prefix_sum[row_idx - 1][col_idx][0] + 
+                                                   prefix_sum[row_idx][col_idx - 1][0] - 
+                                                   prefix_sum[row_idx - 1][col_idx - 1][0])
+              
+                prefix_sum[row_idx][col_idx][1] = (prefix_sum[row_idx - 1][col_idx][1] + 
+                                                   prefix_sum[row_idx][col_idx - 1][1] - 
+                                                   prefix_sum[row_idx - 1][col_idx - 1][1])
+              
                 
-
-                if x_count[i + 1][j + 1] > 0 and x_count[i + 1][j + 1] == y_count[i + 1][j + 1]:
-                    ans += 1
-                    
-        return ans
+                if cell_value != ".":
+                  
+                    character_type = ord(cell_value) & 1
+                    prefix_sum[row_idx][col_idx][character_type] += 1
+              
+                
+                if (prefix_sum[row_idx][col_idx][0] > 0 and 
+                    prefix_sum[row_idx][col_idx][0] == prefix_sum[row_idx][col_idx][1]):
+                    result_count += 1
+      
+        return result_count
