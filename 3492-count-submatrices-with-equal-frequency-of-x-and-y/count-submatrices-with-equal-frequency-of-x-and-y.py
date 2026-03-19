@@ -1,18 +1,27 @@
 class Solution:
-  def numberOfSubmatrices(self, grid: list[list[str]]) -> int:
-    m = len(grid)
-    n = len(grid[0])
-    ans = 0
-    
-    x = [[0] * (n + 1) for _ in range(m + 1)]
-    
-    y = [[0] * (n + 1) for _ in range(m + 1)]
+    def numberOfSubmatrices(self, grid: list[list[str]]) -> int:
+        m, n = len(grid), len(grid[0])
+        x_count = [[0] * (n + 1) for _ in range(m + 1)]
+        y_count = [[0] * (n + 1) for _ in range(m + 1)]
+        ans = 0
 
-    for i, row in enumerate(grid):
-      for j, cell in enumerate(row):
-        x[i + 1][j + 1] = (cell == 'X') + x[i][j + 1] + x[i + 1][j] - x[i][j]
-        y[i + 1][j + 1] = (cell == 'Y') + y[i][j + 1] + y[i + 1][j] - y[i][j]
-        if x[i + 1][j + 1] > 0 and x[i + 1][j + 1] == y[i + 1][j + 1]:
-          ans += 1
+        for i in range(m):
+            for j in range(n):
+                x_count[i + 1][j + 1] = (
+                    (1 if grid[i][j] == 'X' else 0) +
+                    x_count[i][j + 1] +
+                    x_count[i + 1][j] -
+                    x_count[i][j]
+                )
+                y_count[i + 1][j + 1] = (
+                    (1 if grid[i][j] == 'Y' else 0) +
+                    y_count[i][j + 1] +
+                    y_count[i + 1][j] -
+                    y_count[i][j]
+                )
+                
 
-    return ans
+                if x_count[i + 1][j + 1] > 0 and x_count[i + 1][j + 1] == y_count[i + 1][j + 1]:
+                    ans += 1
+                    
+        return ans
