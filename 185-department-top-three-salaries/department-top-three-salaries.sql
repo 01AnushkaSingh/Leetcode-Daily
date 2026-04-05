@@ -1,4 +1,3 @@
-# Write your MySQL query statement below
 WITH
     T AS (
         SELECT
