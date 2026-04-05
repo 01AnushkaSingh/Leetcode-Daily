@@ -1,12 +1,21 @@
 # Write your MySQL query statement below
 
 
-SELECT Round(Count(NULLIF(a.event_date, NULL)) / Count(*), 2) fraction 
-FROM   activity a 
-       RIGHT JOIN (SELECT player_id, 
-                          Min(event_date) event_date 
-                   FROM   activity 
-                   GROUP  BY player_id 
-                   ORDER  BY NULL) b 
-               ON Datediff(a.event_date, b.event_date) = 1 
-                  AND a.player_id = b.player_id 
+WITH
+  Players AS (
+    SELECT player_id, MIN(event_date) AS first_login
+    FROM Activity
+    GROUP BY 1
+  )
+SELECT ROUND(
+    COUNT(Players.player_id) / (
+      SELECT COUNT(DISTINCT Activity.player_id)
+      FROM Activity
+    ),
+    2
+  ) AS fraction
+FROM Players
+INNER JOIN Activity
+  ON (
+    Players.player_id = Activity.player_id
+    AND DATEDIFF(Players.first_login, Activity.event_date) = -1)
