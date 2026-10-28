@@ -10,7 +10,7 @@ class Solution:
              
                 if nums[right]==0:
                     czero+=1
-                while czero>k:
+                if czero>k:
                     
                     if nums[left]==0:
                         czero-=1
