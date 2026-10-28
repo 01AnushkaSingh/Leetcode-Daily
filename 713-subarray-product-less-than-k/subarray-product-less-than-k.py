@@ -10,7 +10,7 @@ class Solution:
             prod*=nums[right]
 
             while prod>=k:
-                prod/=nums[left]
+                prod//=nums[left]
                 left+=1
 
             count+=right-left+1
