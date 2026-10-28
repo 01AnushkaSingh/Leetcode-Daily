@@ -4,14 +4,13 @@ class Solution:
         n=len(nums)
         maxsum=0
         j=0
-        for num in nums:
+        while(j<n):
             if nums[j]==1:
                 onesum+=1
-                maxsum=max(onesum,maxsum)
 
             else:
-                
+                maxsum=max(onesum,maxsum)
                 onesum=0
 
             j+=1
-        return maxsum
+        return max(maxsum,onesum)
